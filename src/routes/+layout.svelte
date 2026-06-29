@@ -2,6 +2,7 @@
 	import '$lib/styles/global.css';
 	import { cart } from '$lib/cart.svelte';
 	import { page } from '$app/stores';
+	import logoImg from '$lib/assets/logo.webp';
 
 	let { children } = $props();
 
@@ -12,11 +13,7 @@
 	<header class="site-header">
 		<div class="container header-inner">
 			<a href="/" class="logo" onclick={() => (mobileMenuOpen = false)}>
-				<span class="logo-mark">VBB</span>
-				<span class="logo-text">
-					<span class="logo-top">Vermont</span>
-					<span class="logo-bottom">Bunk Beds</span>
-				</span>
+				<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img" />
 			</a>
 
 			<nav class="main-nav" class:open={mobileMenuOpen}>
@@ -65,11 +62,7 @@
 		<div class="container footer-inner">
 			<div class="footer-brand">
 				<a href="/" class="logo logo-light">
-					<span class="logo-mark">VBB</span>
-					<span class="logo-text">
-						<span class="logo-top">Vermont</span>
-						<span class="logo-bottom">Bunk Beds</span>
-					</span>
+					<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img logo-img-light" />
 				</a>
 				<p>Handcrafted solid wood bunk beds built on our small family farm in Starksboro, Vermont.</p>
 			</div>
@@ -114,7 +107,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 72px;
+		height: 96px;
 		gap: 32px;
 	}
 
@@ -127,49 +120,16 @@
 		flex-shrink: 0;
 	}
 
-	.logo-mark {
-		width: 44px;
-		height: 44px;
-		background: var(--color-bark);
-		color: #fff;
-		border-radius: var(--radius-sm);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-family: var(--font-heading);
-		font-size: 0.85rem;
-		font-weight: bold;
-		letter-spacing: 0.05em;
+	.logo-img {
+		height: 80px;
+		width: auto;
+		display: block;
 	}
 
-	.logo-light .logo-mark {
-		background: rgba(255,255,255,0.15);
-		border: 1px solid rgba(255,255,255,0.3);
+	.logo-img-light {
+		filter: brightness(0) invert(1);
+		opacity: 0.9;
 	}
-
-	.logo-text {
-		display: flex;
-		flex-direction: column;
-		line-height: 1.1;
-	}
-
-	.logo-top {
-		font-family: var(--font-heading);
-		font-size: 0.65rem;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-		color: var(--color-muted);
-	}
-
-	.logo-bottom {
-		font-family: var(--font-heading);
-		font-size: 1rem;
-		font-weight: bold;
-		color: var(--color-charcoal);
-	}
-
-	.logo-light .logo-top,
-	.logo-light .logo-bottom { color: rgba(255,255,255,0.85); }
 
 	/* Nav */
 	.main-nav {

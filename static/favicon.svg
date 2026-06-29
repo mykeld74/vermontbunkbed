@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#f5efe6"/>
+  <!--
+    5-lobed maple leaf. Sinus points pull far inward to create
+    the characteristic deep concave cuts between lobes.
+    Reading clockwise from top-center lobe tip.
+  -->
+  <polygon
+    points="
+      32,7
+      37,18  47,11
+      46,22  56,25
+      45,32  40,45
+      34,45  34,57  30,57  30,45
+      24,45  19,32
+      8,25   18,22
+      17,11  27,18
+    "
+    fill="#3a2c1e"
+  />
+</svg>
