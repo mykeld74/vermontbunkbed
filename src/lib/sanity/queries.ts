@@ -1,0 +1,40 @@
+import { sanityClient } from './client';
+import type { Collection, Finish, SiteSettings } from './types';
+
+const collectionFields = `
+  _id, name, slug, description, images, featured,
+  productPrices[] {
+    basePrice,
+    twinUpcharge, fullUpcharge, queenUpcharge, kingUpcharge,
+    productType-> { _id, displayName, description, isAddon, allowTopBottomMix, availableSizes, exclusiveGroup, restrictToProductTypes[]-> { _id } }
+  }
+`;
+
+export async function getCollections(): Promise<Collection[]> {
+	return sanityClient.fetch(`*[_type == "collection"] | order(name asc) { ${collectionFields} }`);
+}
+
+export async function getCollection(slug: string): Promise<Collection | null> {
+	return sanityClient.fetch(
+		`*[_type == "collection" && slug.current == $slug][0] { ${collectionFields} }`,
+		{ slug }
+	);
+}
+
+export async function getFinishesForCollection(collectionId: string): Promise<Finish[]> {
+	const specific: Finish[] = await sanityClient.fetch(
+		`*[_type == "finish" && references($collectionId)] | order(name asc)`,
+		{ collectionId }
+	);
+	if (specific.length > 0) return specific;
+	return sanityClient.fetch(`*[_type == "finish"] | order(name asc)`);
+}
+
+export async function getAllFinishes(): Promise<Finish[]> {
+	return sanityClient.fetch(`*[_type == "finish"] | order(name asc)`);
+}
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+	const settings = await sanityClient.fetch(`*[_type == "siteSettings"][0]`);
+	return settings ?? { globalSalePercent: 0 };
+}
