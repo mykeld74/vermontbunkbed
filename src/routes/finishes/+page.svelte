@@ -147,6 +147,7 @@
 
 <svelte:head>
 	<title>Finish Options — Vermont Bunk Beds</title>
+	<meta name="description" content="Choose from natural coatings, 22 hand-selected Benjamin Moore paint colors, or water stains — all No-VOC and safe for your family." />
 </svelte:head>
 
 <!-- Hero -->
@@ -168,7 +169,7 @@
 			<div class="section-text">
 				<p class="eyebrow-dark">Section 1</p>
 				<h2>Vermont Natural Coatings</h2>
-				<div class="divider"></div>
+				<div class="divider" aria-hidden="true"></div>
 				<p>We use <strong>PolyWhey®</strong> — a naturally derived, No-VOC &amp; Non-Toxic wood finish made right here in Vermont. It's a water-based polyurethane that brings out the natural beauty of the wood while providing a durable, food-safe protective coat.</p>
 				<p>PolyWhey is our default finish and is included in the base price. It's the perfect choice if you love the look and warmth of natural hardwood grain.</p>
 				{#each groups as [cat, finishes]}
@@ -209,7 +210,7 @@
 		<div class="container">
 			<p class="eyebrow-dark">Section 2</p>
 			<h2>Benjamin Moore Zero-VOC Paint Colors</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p class="section-desc">All of our painted finishes use <strong>Benjamin Moore Aura</strong> — the highest quality Zero-VOC interior paint available. Choose from our hand-selected palette of 22 colors, or request any Benjamin Moore color. All are safe for your family and durable enough for years of use.</p>
 
 			{#each groups as [cat, finishes]}
@@ -249,7 +250,7 @@
 		<div class="container">
 			<p class="eyebrow-dark">Section 3</p>
 			<h2>Water Stains</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p class="section-desc">Water-based stains from <strong>General Finishes</strong> let the natural wood grain show through while adding rich, lasting color. Non-toxic and durable — shown here on maple and oak.</p>
 
 			<div class="stain-grid">
@@ -273,7 +274,7 @@
 		<div class="container">
 			<p class="eyebrow-dark">Section 4</p>
 			<h2>Benjamin Moore Natura</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p class="section-desc">Benjamin Moore <strong>Natura®</strong> is their asthma &amp; allergy friendly paint line — Zero-VOC, washable, and available in thousands of colors. If you have a specific color in mind that isn't in our standard palette, Natura is likely the path.</p>
 
 			<div class="natura-grid">

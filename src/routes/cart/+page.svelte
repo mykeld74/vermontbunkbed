@@ -183,7 +183,9 @@
 					</div>
 				{:else}
 					<div class="discount-row">
+						<label for="discount-code" class="sr-only">Discount code</label>
 						<input
+							id="discount-code"
 							type="text"
 							class="discount-input"
 							placeholder="Discount code"
@@ -461,4 +463,5 @@
 		.cart-layout { grid-template-columns: 1fr; }
 		.cart-summary { position: static; }
 	}
+	.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 </style>

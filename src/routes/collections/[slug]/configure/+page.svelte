@@ -129,6 +129,7 @@
 
 <svelte:head>
 	<title>Configure — {data.collection.name} — Vermont Bunk Beds</title>
+	<meta name="description" content="Customize your {data.collection.name} bunk bed — choose your size, finish, and add-ons. Built to order in Vermont." />
 </svelte:head>
 
 <div class="page-bar">
@@ -190,6 +191,8 @@
 										<button
 											class="size-btn"
 											class:selected={bottomSize === size}
+											aria-label="Bottom bunk: {size.charAt(0).toUpperCase() + size.slice(1)}{upcharge > 0 ? ` (+$${upcharge})` : ''}"
+											aria-pressed={bottomSize === size}
 											onclick={() => (bottomSize = size)}
 										>
 											<span>{size.charAt(0).toUpperCase() + size.slice(1)}</span>
@@ -201,12 +204,20 @@
 							<!-- Top Bunk — options constrained by bottom selection -->
 							<div class="size-group">
 								<p class="size-group-label">
-								Top Bunk
-								<span class="size-tooltip-wrap">
-									<span class="size-tooltip-icon">?</span>
-									<span class="size-tooltip-text">Top bunk must be equal to or smaller than the bottom bunk.</span>
-								</span>
-							</p>
+									Top Bunk
+									<span class="size-tooltip-wrap">
+										<button
+											type="button"
+											class="size-tooltip-icon"
+											aria-describedby="top-bunk-tip"
+										>?</button>
+										<span
+											id="top-bunk-tip"
+											role="tooltip"
+											class="size-tooltip-text"
+										>Top bunk must be equal to or smaller than the bottom bunk.</span>
+									</span>
+								</p>
 								<div class="size-options">
 									{#each selectedProduct.productType.availableSizes as size (size)}
 										{@const upcharge = getSizeUpcharge(selectedProduct, size)}
@@ -216,6 +227,8 @@
 											class:selected={topSize === size}
 											class:unavailable={!allowed}
 											disabled={!allowed}
+											aria-label="Top bunk: {size.charAt(0).toUpperCase() + size.slice(1)}{upcharge > 0 ? ` (+$${upcharge})` : ''}{!allowed ? ' (not available with current bottom bunk size)' : ''}"
+											aria-pressed={topSize === size}
 											onclick={() => (topSize = size)}
 										>
 											<span>{size.charAt(0).toUpperCase() + size.slice(1)}</span>
@@ -232,6 +245,8 @@
 								<button
 									class="size-btn"
 									class:selected={topSize === size}
+									aria-label="{size.charAt(0).toUpperCase() + size.slice(1)}{upcharge > 0 ? ` (+$${upcharge})` : ''}"
+									aria-pressed={topSize === size}
 									onclick={() => (topSize = size)}
 								>
 									<span>{size.charAt(0).toUpperCase() + size.slice(1)}</span>
@@ -255,6 +270,7 @@
 							<button
 								class="addon-btn"
 								class:selected={selectedAddonIds.includes(addon.productType._id)}
+								aria-pressed={selectedAddonIds.includes(addon.productType._id)}
 								onclick={() => toggleAddon(addon.productType._id)}
 							>
 								<div class="addon-check">
@@ -529,10 +545,11 @@
 	.size-mix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 	.size-group-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
 	.size-tooltip-wrap { position: relative; display: inline-flex; align-items: center; }
-	.size-tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: var(--color-muted); color: #fff; font-size: 0.65rem; font-weight: 700; cursor: default; line-height: 1; text-transform: none; letter-spacing: 0; }
+	.size-tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: var(--color-muted); color: #fff; font-size: 0.65rem; font-weight: 700; cursor: default; line-height: 1; text-transform: none; letter-spacing: 0; border: none; padding: 0; }
 	.size-tooltip-text { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--color-charcoal); color: #fff; font-size: 0.72rem; font-weight: 400; letter-spacing: 0; text-transform: none; white-space: nowrap; padding: 5px 9px; border-radius: 4px; pointer-events: none; z-index: 10; }
 	.size-tooltip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--color-charcoal); }
-	.size-tooltip-wrap:hover .size-tooltip-text { display: block; }
+	.size-tooltip-wrap:hover .size-tooltip-text,
+	.size-tooltip-icon:focus + .size-tooltip-text { display: block; }
 
 	/* Add-on buttons */
 	.addon-grid { display: flex; flex-direction: column; gap: 10px; }

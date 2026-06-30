@@ -1,3 +1,8 @@
+<svelte:head>
+	<title>Vermont Bunk Beds — Handcrafted Solid Wood Bunk Beds</title>
+	<meta name="description" content="Handcrafted solid hardwood bunk beds built to order on our Vermont farm since 2006. Custom sizes, finishes, and configurations available." />
+</svelte:head>
+
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { urlFor } from '$lib/sanity/client';
@@ -41,7 +46,7 @@
 	<div class="container trust-grid">
 		{#each [{ icon: '🌲', title: 'All Natural Materials', desc: 'Solid hardwood, no particle board or MDF' }, { icon: '🔨', title: 'Built to Order', desc: 'Every bed is made to your specifications' }, { icon: '🛡️', title: 'Ultimate Safety', desc: 'Engineered for safety, built to exceed standards' }, { icon: '🏡', title: 'Family Owned', desc: 'Made on our Vermont farm since 2006' }] as item}
 			<div class="trust-item">
-				<span class="trust-icon">{item.icon}</span>
+				<span class="trust-icon" aria-hidden="true">{item.icon}</span>
 				<h3>{item.title}</h3>
 				<p>{item.desc}</p>
 			</div>
@@ -54,7 +59,7 @@
 	<div class="container">
 		<div class="section-title">
 			<h2>Our Collections</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p>
 				Three distinct lines of handcrafted bunk beds — each built with the same uncompromising
 				quality.
@@ -94,7 +99,7 @@
 		<div class="craft-text">
 			<p class="eyebrow">The Vermont Difference</p>
 			<h2>Made the Old-Fashioned Way</h2>
-			<div class="divider" style="margin: 16px 0 24px;"></div>
+			<div class="divider" aria-hidden="true" style="margin: 16px 0 24px;"></div>
 			<p>
 				Every bed that leaves our farm is cut, shaped, sanded, and finished by hand. We use only
 				solid hardwoods — no shortcuts, no particle board, no compromises.
@@ -103,7 +108,7 @@
 				Our mortise and tenon joinery has been used by craftsmen for centuries because it works.
 				Your grandchildren will still be sleeping in these beds.
 			</p>
-			<a href="/about" class="btn btn-outline" style="margin-top: 32px;">Meet the Family</a>
+			<a href="/about" class="btn btn-ghost" style="margin-top: 32px;">Meet the Family</a>
 		</div>
 		<div class="craft-image">
 			<img src={craftImg} alt="Handcrafted natural wood bunk bed" />
@@ -120,7 +125,7 @@
 		<div class="lifestyle-text">
 			<p class="eyebrow">Made for Families</p>
 			<h2>Where Memories Are Made</h2>
-			<div class="divider" style="margin: 16px 0 24px;"></div>
+			<div class="divider" aria-hidden="true" style="margin: 16px 0 24px;"></div>
 			<p>
 				Kids don't just sleep in these beds — they play in them, read in them, tell secrets from the
 				top bunk. We build them strong enough to handle all of it.
@@ -138,7 +143,7 @@
 	<div class="container">
 		<div class="section-title">
 			<h2>Every Finish, Your Choice</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p>
 				Choose from natural coatings, 22 hand-selected Benjamin Moore paint colors, or water stains
 				— all No-VOC and safe for your family.

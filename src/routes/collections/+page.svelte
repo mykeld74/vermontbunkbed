@@ -7,6 +7,7 @@
 
 <svelte:head>
 	<title>Collections — Vermont Bunk Beds</title>
+	<meta name="description" content="Browse our handcrafted solid wood bunk bed collections. Built to order in Vermont with custom sizes and finishes." />
 </svelte:head>
 
 <div class="page-header">

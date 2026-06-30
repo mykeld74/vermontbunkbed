@@ -8,6 +8,7 @@
 
 <svelte:head>
 	<title>Our Story — Vermont Bunk Beds</title>
+	<meta name="description" content="Family-owned and operated since 2006, we handcraft solid wood bunk beds on our small farm in Starksboro, Vermont." />
 </svelte:head>
 
 <!-- Hero -->
@@ -27,7 +28,7 @@
 		</div>
 		<div class="alt-text">
 			<h2>We Value Hard Work</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p>
 				At Vermont Bunk Beds, owners Scott and Amy Mansfield understand the value of hard work, the
 				value of a quality product, and the value of a dollar. But most of all, they simply enjoy
@@ -42,7 +43,7 @@
 	<div class="container alt-grid">
 		<div class="alt-text">
 			<h2>A Vermont Tradition</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p>
 				In fact, as a local family farm Scott and Amy enjoy all kinds of Vermont traditions —
 				everything from dairy farming and maple sugaring to horses, haying, and swimming in the
@@ -68,7 +69,7 @@
 		</div>
 		<div class="alt-text">
 			<h2>A Family Affair</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p>
 				In shopping for bunk beds for their own children, Scott and Amy realized the need for a
 				safer product that would hold up to the every day demands of their active children and yet
@@ -87,7 +88,7 @@
 	<div class="container alt-grid">
 		<div class="alt-text">
 			<h2>A Note From The Owners</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 			<p>
 				When it comes to creating furniture, Vermont Bunk Beds believes in promoting these ideas:
 				high quality, hand craftsmanship, life long durability, premier safety, long-term
@@ -119,17 +120,17 @@
 		</div>
 		<div class="contact-links">
 			<a href="tel:8024480559" class="contact-item">
-				<span class="contact-icon">📞</span>
+				<span class="contact-icon" aria-hidden="true">📞</span>
 				<span class="contact-label">Call Us</span>
 				<span class="contact-value">(802) 448-0559</span>
 			</a>
 			<a href="mailto:vermontbunkbeds@gmail.com" class="contact-item">
-				<span class="contact-icon">✉️</span>
+				<span class="contact-icon" aria-hidden="true">✉️</span>
 				<span class="contact-label">Email Us</span>
 				<span class="contact-value">vermontbunkbeds@gmail.com</span>
 			</a>
 			<a href="/collections" class="contact-item contact-item-cta">
-				<span class="contact-icon">🛏️</span>
+				<span class="contact-icon" aria-hidden="true">🛏️</span>
 				<span class="contact-label">Ready to order?</span>
 				<span class="contact-value">Shop Collections →</span>
 			</a>

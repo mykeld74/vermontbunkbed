@@ -14,6 +14,7 @@
 
 <svelte:head>
 	<title>{data.collection.name} — Vermont Bunk Beds</title>
+	<meta name="description" content={data.collection.description ? `${data.collection.description} Handcrafted in Vermont with solid wood.` : `Shop the ${data.collection.name} collection — handcrafted solid wood bunk beds built to order in Vermont.`} />
 </svelte:head>
 
 <!-- Hero -->
@@ -40,7 +41,7 @@
 	<div class="container">
 		<div class="section-title">
 			<h2>Choose Your Bed</h2>
-			<div class="divider"></div>
+			<div class="divider" aria-hidden="true"></div>
 		</div>
 
 		<div class="product-grid">
