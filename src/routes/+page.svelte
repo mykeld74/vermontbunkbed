@@ -4,8 +4,8 @@
 	import heroBg from '$lib/assets/Homepagebunkbed.jpg';
 	import craftImg from '$lib/assets/jaypeakcover.jpg';
 	import kidsImg from '$lib/assets/Home-page-crop.jpg';
-	import horsesImg from '$lib/assets/farmhorses.jpg';
-	import sugarhouseImg from '$lib/assets/sugarhouse.jpg';
+	import horsesImg from '$lib/assets/aboutus/farmhorses.jpg';
+	import sugarhouseImg from '$lib/assets/aboutus/sugarhouse.jpg';
 
 	let { data }: { data: PageData } = $props();
 </script>
