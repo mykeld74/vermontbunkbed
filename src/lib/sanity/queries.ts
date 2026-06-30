@@ -35,6 +35,12 @@ export async function getAllFinishes(): Promise<Finish[]> {
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-	const settings = await sanityClient.fetch(`*[_type == "siteSettings"][0]`);
-	return settings ?? { globalSalePercent: 0 };
+	const activeSale = await sanityClient.fetch(
+		`*[_type == "sale" && active == true] | order(_updatedAt desc) [0] { discountPercent, title }`
+	);
+	return {
+		globalSalePercent: activeSale?.discountPercent ?? 0,
+		globalSaleLabel: activeSale?.title ?? '',
+		announcementBanner: activeSale?.title ?? '',
+	};
 }

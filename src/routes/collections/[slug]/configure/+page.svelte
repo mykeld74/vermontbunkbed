@@ -48,7 +48,7 @@
 	let selectedProduct = $state<CollectionProduct | null>(data.selectedProduct ?? null);
 	let topSize = $state('twin');
 	let bottomSize = $state('twin');
-	let selectedFinishId = $state<string>(data.finishes[0]?._id ?? '');
+	let selectedFinishId = $state<string>('');
 	let selectedAddonIds = $state<string[]>([]);
 
 	const availableAddons = $derived.by(() => {
@@ -75,7 +75,9 @@
 		return [...map.entries()].filter(([, items]) => items.length > 0);
 	});
 
-	const totalPrice = $derived(() => {
+	const salePercent = $derived(data.settings?.globalSalePercent ?? 0);
+
+	const basePrice = $derived(() => {
 		if (!selectedProduct) return 0;
 		const topUpcharge = getSizeUpcharge(selectedProduct, topSize);
 		const bottomUpcharge = selectedProduct.productType.allowTopBottomMix
@@ -88,6 +90,11 @@
 		}, 0);
 		return selectedProduct.basePrice + topUpcharge + bottomUpcharge + finishModifier + addonTotal;
 	});
+
+	// Display price reflects active sale for UI only; cart always stores base price
+	const totalPrice = $derived(
+		salePercent > 0 ? basePrice() * (1 - salePercent / 100) : basePrice()
+	);
 
 	function toggleAddon(id: string) {
 		if (selectedAddonIds.includes(id)) {
@@ -124,7 +131,7 @@
 			finishName: selectedFinish.name,
 			addonIds: selectedAddonIds,
 			addonNames,
-			unitPrice: totalPrice(),
+			unitPrice: basePrice(),
 			quantity: 1
 		});
 		goto('/cart');
@@ -168,7 +175,7 @@
 					>
 						<div class="product-btn-top">
 							<span class="product-name">{product.productType.displayName}</span>
-							<span class="product-price">From ${product.basePrice.toLocaleString()}</span>
+							<span class="product-price">From ${product.basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
 						</div>
 						<p class="product-desc">{product.productType.description}</p>
 					</button>
@@ -243,7 +250,7 @@
 								</div>
 								<div class="addon-info">
 									<span class="addon-name">{addon.productType.displayName}</span>
-									<span class="addon-price">+${addon.basePrice.toLocaleString()}</span>
+									<span class="addon-price">+${addon.basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
 								</div>
 							</button>
 						{/each}
@@ -303,7 +310,7 @@
 					</div>
 					<div class="summary-line">
 						<span>{selectedProduct.productType.displayName}</span>
-						<span>${selectedProduct.basePrice.toLocaleString()}</span>
+						<span>${selectedProduct.basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
 					</div>
 					{#if selectedProduct.productType.availableSizes?.length > 0}
 						<div class="summary-line summary-sub">
@@ -324,13 +331,17 @@
 								<span>+${selectedFinish.priceModifier}</span>
 							{/if}
 						</div>
+					{:else}
+						<div class="summary-line summary-sub summary-required">
+							<span>Finish: <em>required</em></span>
+						</div>
 					{/if}
 					{#each selectedAddonIds as addonId}
 						{@const addon = availableAddons.find((a) => a.productType._id === addonId)}
 						{#if addon}
 							<div class="summary-line summary-sub">
 								<span>{addon.productType.displayName}</span>
-								<span>+${addon.basePrice.toLocaleString()}</span>
+								<span>+${addon.basePrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
 							</div>
 						{/if}
 					{/each}
@@ -338,15 +349,20 @@
 
 				<div class="summary-total">
 					<span>Total</span>
-					<strong>${totalPrice().toLocaleString()}</strong>
+					<div class="summary-total-price">
+						{#if salePercent > 0}
+							<s class="original-price">${basePrice().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</s>
+						{/if}
+						<strong>${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+					</div>
 				</div>
 
 				<button
 					class="btn btn-primary add-btn"
 					onclick={addToCart}
-					disabled={!selectedFinishId}
+					disabled={!selectedFinishId || !selectedProduct}
 				>
-					Add to Cart
+					{!selectedFinishId ? 'Select a Finish to Continue' : 'Add to Cart'}
 				</button>
 
 				<p class="summary-note">Shipping calculated at checkout. Built to order — allow 1–3 weeks.</p>
@@ -633,6 +649,7 @@
 	}
 
 	.summary-sub { color: var(--color-muted); font-weight: 400; font-size: 0.85rem; padding-left: 12px; }
+	.summary-required em { color: #c0392b; font-style: normal; }
 
 	.summary-total {
 		display: flex;
@@ -646,6 +663,8 @@
 
 	.summary-total span { font-size: 0.85rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 	.summary-total strong { font-family: var(--font-heading); font-size: 1.6rem; color: var(--color-charcoal); }
+	.summary-total-price { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+	.original-price { font-size: 1rem; color: var(--color-muted); text-decoration: line-through; }
 
 	.add-btn { width: 100%; text-align: center; padding: 16px; }
 	.add-btn:disabled { opacity: 0.5; cursor: not-allowed; }

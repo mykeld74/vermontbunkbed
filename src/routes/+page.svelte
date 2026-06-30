@@ -11,11 +11,10 @@
 </script>
 
 <!-- Announcement banner -->
-{#if data.settings?.announcementBanner}
+{#if data.settings?.globalSalePercent > 0}
 	<div class="banner">
 		<div class="container">
-			{#if data.settings.globalSaleLabel}<strong>{data.settings.globalSaleLabel}:</strong>{/if}
-			{data.settings.announcementBanner}
+			<strong>{data.settings.globalSaleLabel}</strong> — {data.settings.globalSalePercent}% off sitewide
 		</div>
 	</div>
 {/if}
