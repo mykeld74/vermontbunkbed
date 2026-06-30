@@ -6,38 +6,6 @@
 	import { goto } from '$app/navigation';
 	import { urlFor } from '$lib/sanity/client';
 
-	const FINISH_CATEGORY_ORDER = [
-		'Vermont Natural Coatings',
-		'Benjamin Moore Zero-VOC Paint',
-		'Water Stains',
-		'Benjamin Moore Natura',
-	];
-
-	const NATURA_FINISH_NAMES = new Set([
-		'Snow White', 'Alabaster', 'Antique White', 'Linen',
-		'Reverent Gray', 'Millstone', 'Empire Gray', 'Perfect Gray',
-		'Seagull Gray', 'Driftwood', 'Queenstown Gray', 'Dark Chocolate',
-		'Lamp Black', 'Coastal Blue', 'Twilight', 'China Blue',
-		'Klein Blue', 'Blue Moon', 'Halcyon Blue', 'Persian Blue',
-		'Gulf Stream Blue', 'Key West Blue', 'Patina Green', 'Basil',
-		'Emerald', 'Westminster Green', 'Ballet Pink', 'Coral Crush',
-		'Holiday Red', 'Tuscan Red', 'Harvest Yellow', 'Sunglow', 'Persimmon',
-	]);
-
-	const WATER_STAIN_FINISH_NAMES = new Set([
-		'White Wash', 'Natural', 'Antique Oak', 'Graystone', 'Hickory',
-		'Antique Brown', 'Brown Mahogany', 'Provincial', 'Onyx', 'Black',
-		'Walnut', 'Pecan', 'Black Cherry', 'Sedona', 'Cabernet',
-		'Tobacco', 'Espresso', 'Graphite',
-	]);
-
-	function getFinishCategory(finish: Finish): string {
-		const name = finish.name;
-		if (name === 'PolyWhey Natural' || name === 'Unfinished') return 'Vermont Natural Coatings';
-		if (NATURA_FINISH_NAMES.has(name)) return 'Benjamin Moore Natura';
-		if (WATER_STAIN_FINISH_NAMES.has(name)) return 'Water Stains';
-		return 'Benjamin Moore Zero-VOC Paint';
-	}
 
 	let { data }: { data: PageData } = $props();
 
@@ -66,13 +34,16 @@
 
 	const finishGroups = $derived.by(() => {
 		const map = new Map<string, Finish[]>();
-		for (const cat of FINISH_CATEGORY_ORDER) map.set(cat, []);
 		for (const finish of data.finishes) {
-			const cat = getFinishCategory(finish);
+			const cat = finish.category?.name ?? 'Other';
 			if (!map.has(cat)) map.set(cat, []);
 			map.get(cat)!.push(finish);
 		}
-		return [...map.entries()].filter(([, items]) => items.length > 0);
+		return [...map.entries()].sort(([a], [b]) => {
+			if (a === 'Other') return 1;
+			if (b === 'Other') return -1;
+			return 0;
+		});
 	});
 
 	const salePercent = $derived(data.settings?.globalSalePercent ?? 0);
@@ -83,7 +54,7 @@
 		const bottomUpcharge = selectedProduct.productType.allowTopBottomMix
 			? getSizeUpcharge(selectedProduct, bottomSize)
 			: 0;
-		const finishModifier = selectedFinish?.priceModifier ?? 0;
+		const finishModifier = selectedFinish?.effectivePriceModifier ?? 0;
 		const addonTotal = selectedAddonIds.reduce((sum, id) => {
 			const addon = availableAddons.find((a) => a.productType._id === id);
 			return sum + (addon?.basePrice ?? 0);
@@ -287,8 +258,8 @@
 										<div class="finish-swatch"></div>
 									{/if}
 									<span class="finish-name">{finish.name}</span>
-									{#if finish.priceModifier > 0}
-										<span class="finish-upcharge">+${finish.priceModifier}</span>
+									{#if finish.effectivePriceModifier > 0}
+										<span class="finish-upcharge">+${finish.effectivePriceModifier}</span>
 									{/if}
 								</button>
 							{/each}
@@ -327,8 +298,8 @@
 					{#if selectedFinish}
 						<div class="summary-line summary-sub">
 							<span>Finish: {selectedFinish.name}</span>
-							{#if selectedFinish.priceModifier > 0}
-								<span>+${selectedFinish.priceModifier}</span>
+							{#if selectedFinish.effectivePriceModifier > 0}
+								<span>+${selectedFinish.effectivePriceModifier}</span>
 							{/if}
 						</div>
 					{:else}
@@ -358,6 +329,7 @@
 				</div>
 
 				<button
+					type="button"
 					class="btn btn-primary add-btn"
 					onclick={addToCart}
 					disabled={!selectedFinishId || !selectedProduct}

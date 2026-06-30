@@ -21,17 +21,24 @@ export async function getCollection(slug: string): Promise<Collection | null> {
 	);
 }
 
+const finishFields = `
+	_id, name, slug, description, image,
+	category-> { _id, name, defaultPriceModifier },
+	priceModifier,
+	"effectivePriceModifier": coalesce(priceModifier, category->defaultPriceModifier, 0)
+`;
+
 export async function getFinishesForCollection(collectionId: string): Promise<Finish[]> {
 	const specific: Finish[] = await sanityClient.fetch(
-		`*[_type == "finish" && references($collectionId)] | order(name asc)`,
+		`*[_type == "finish" && references($collectionId)] | order(category->name asc, name asc) { ${finishFields} }`,
 		{ collectionId }
 	);
 	if (specific.length > 0) return specific;
-	return sanityClient.fetch(`*[_type == "finish"] | order(name asc)`);
+	return sanityClient.fetch(`*[_type == "finish"] | order(category->name asc, name asc) { ${finishFields} }`);
 }
 
 export async function getAllFinishes(): Promise<Finish[]> {
-	return sanityClient.fetch(`*[_type == "finish"] | order(name asc)`);
+	return sanityClient.fetch(`*[_type == "finish"] | order(category->name asc, name asc) { ${finishFields} }`);
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

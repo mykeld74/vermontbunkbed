@@ -17,10 +17,13 @@ const writeClient = createClient({
 });
 
 export const POST: RequestHandler = async ({ request, url }) => {
-	const { items, discountCode, discountId, salePercent } = (await request.json()) as {
+	const { items, discountCode, discountId, discountType, discountPercent, discountAmountOff, salePercent } = (await request.json()) as {
 		items: CartItem[];
 		discountCode?: string;
 		discountId?: string;
+		discountType?: 'percent' | 'amount';
+		discountPercent?: number;
+		discountAmountOff?: number;
 		salePercent?: number;
 	};
 
@@ -69,7 +72,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 		// Re-validate the code server-side before applying
 		const discount = await writeClient.fetch(
 			`*[_type == "discount" && _id == $id && code == $code && active == true][0] {
-				_id, percentOff, expiresAt, maxUses, usedCount
+				_id, discountType, percentOff, amountOff, expiresAt, maxUses, usedCount
 			}`,
 			{ id: discountId, code: discountCode.toUpperCase() }
 		);
@@ -79,8 +82,11 @@ export const POST: RequestHandler = async ({ request, url }) => {
 			(!discount.expiresAt || new Date(discount.expiresAt) >= new Date()) &&
 			(discount.maxUses == null || (discount.usedCount ?? 0) < discount.maxUses)
 		) {
+			const type = discount.discountType ?? discountType ?? 'percent';
 			const coupon = await stripe.coupons.create({
-				percent_off: discount.percentOff,
+				...(type === 'amount'
+					? { amount_off: Math.round((discount.amountOff ?? discountAmountOff ?? 0) * 100), currency: 'usd' }
+					: { percent_off: discount.percentOff ?? discountPercent }),
 				duration: 'once',
 				name: discountCode.toUpperCase()
 			});

@@ -10,20 +10,30 @@
 	let codeInput = $state('');
 	let discountCode = $state('');
 	let discountId = $state('');
+	let discountType = $state<'percent' | 'amount'>('percent');
 	let discountPercent = $state(0);
+	let discountAmountOff = $state(0);
 	let discountLabel = $state('');
 	let discountError = $state('');
 	let discountLoading = $state(false);
 
 	const salePercent: number = data.salePercent ?? 0;
 
-	// Only the greater of the two applies — no stacking.
-	const activePercent = $derived(Math.max(discountPercent, salePercent));
-	const saleWins = $derived(salePercent > 0 && salePercent >= discountPercent);
-	const codeWins = $derived(discountPercent > 0 && discountPercent > salePercent);
-
 	const subtotal = $derived(cart.total);
-	const discountAmount = $derived(subtotal * (activePercent / 100));
+
+	// Effective discount amounts for comparison
+	const codeDiscountAmount = $derived(
+		discountType === 'amount'
+			? Math.min(discountAmountOff, subtotal)
+			: subtotal * (discountPercent / 100)
+	);
+	const saleDiscountAmount = $derived(subtotal * (salePercent / 100));
+
+	// Only the greater of the two applies — no stacking.
+	const saleWins = $derived(salePercent > 0 && saleDiscountAmount >= codeDiscountAmount);
+	const codeWins = $derived((discountPercent > 0 || discountAmountOff > 0) && codeDiscountAmount > saleDiscountAmount);
+
+	const discountAmount = $derived(saleWins ? saleDiscountAmount : codeWins ? codeDiscountAmount : 0);
 	const total = $derived(subtotal - discountAmount);
 
 	function fmt(n: number) {
@@ -44,11 +54,17 @@
 			if (data.valid) {
 				discountCode = data.code;
 				discountId = data.discountId;
-				discountPercent = data.percentOff;
+				discountType = data.discountType ?? 'percent';
+				discountPercent = data.percentOff ?? 0;
+				discountAmountOff = data.amountOff ?? 0;
 				discountLabel = data.label;
 				codeInput = '';
-				if (salePercent >= data.percentOff) {
-					discountError = `Your code (${data.percentOff}% off) is less than the current sale (${salePercent}% off). The sale discount has been applied instead.`;
+				// Warn if the sale is a better deal
+				const codeSaving = data.discountType === 'amount'
+					? Math.min(data.amountOff ?? 0, subtotal)
+					: subtotal * ((data.percentOff ?? 0) / 100);
+				if (salePercent > 0 && saleDiscountAmount >= codeSaving) {
+					discountError = `Your code saves less than the current sale (${salePercent}% off). The sale discount has been applied instead.`;
 				}
 			} else {
 				discountError = data.message;
@@ -63,7 +79,9 @@
 	function removeDiscount() {
 		discountCode = '';
 		discountId = '';
+		discountType = 'percent';
 		discountPercent = 0;
+		discountAmountOff = 0;
 		discountLabel = '';
 		discountError = '';
 		codeInput = '';
@@ -80,7 +98,7 @@
 					items: cart.items,
 					// Pass whichever discount wins — code or sale (never both)
 					...(codeWins
-						? { discountCode, discountId }
+						? { discountCode, discountId, discountType, discountPercent, discountAmountOff }
 						: saleWins
 							? { salePercent }
 							: {})
@@ -159,7 +177,7 @@
 					<div class="discount-applied">
 						<div class="discount-info">
 							<span class="discount-tag">✓ {discountCode}</span>
-							<span class="discount-desc">{discountPercent}% off</span>
+							<span class="discount-desc">{discountType === 'amount' ? `$${discountAmountOff} off` : `${discountPercent}% off`}</span>
 						</div>
 						<button class="discount-remove" onclick={removeDiscount}>Remove</button>
 					</div>
@@ -201,9 +219,14 @@
 						<span>Subtotal</span>
 						<span>${fmt(subtotal)}</span>
 					</div>
-					{#if activePercent > 0}
+					{#if discountAmount > 0}
 						<div class="totals-line totals-discount">
-							<span>{saleWins ? `Sale (${salePercent}%)` : `Discount (${discountPercent}%)`}</span>
+							<span>{saleWins
+							? `Sale (${salePercent}%)`
+							: discountType === 'amount'
+								? `Discount ($${discountAmountOff} off)`
+								: `Discount (${discountPercent}%)`
+						}</span>
 							<span>−${fmt(discountAmount)}</span>
 						</div>
 					{/if}

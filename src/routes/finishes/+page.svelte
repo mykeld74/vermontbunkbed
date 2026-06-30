@@ -128,50 +128,18 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// Map Sanity finish names to display categories
-	const NATURAL_NAMES = new Set(['PolyWhey Natural', 'Unfinished']);
-
-	const NATURA_NAMES = new Set([
-		'Snow White', 'Alabaster', 'Antique White', 'Linen',
-		'Reverent Gray', 'Millstone', 'Empire Gray', 'Perfect Gray',
-		'Seagull Gray', 'Driftwood', 'Queenstown Gray', 'Dark Chocolate',
-		'Lamp Black', 'Coastal Blue', 'Twilight', 'China Blue',
-		'Klein Blue', 'Blue Moon', 'Halcyon Blue', 'Persian Blue',
-		'Gulf Stream Blue', 'Key West Blue', 'Patina Green', 'Basil',
-		'Emerald', 'Westminster Green', 'Ballet Pink', 'Coral Crush',
-		'Holiday Red', 'Tuscan Red', 'Harvest Yellow', 'Sunglow', 'Persimmon',
-	]);
-
-	const WATER_STAIN_NAMES = new Set([
-		'White Wash', 'Natural', 'Antique Oak', 'Graystone', 'Hickory',
-		'Antique Brown', 'Brown Mahogany', 'Provincial', 'Onyx', 'Black',
-		'Walnut', 'Pecan', 'Black Cherry', 'Sedona', 'Cabernet',
-		'Tobacco', 'Espresso', 'Graphite',
-	]);
-
-	function getCategory(finish: Finish): string {
-		if (NATURAL_NAMES.has(finish.name)) return 'Vermont Natural Coatings';
-		if (NATURA_NAMES.has(finish.name)) return 'Benjamin Moore Natura';
-		if (WATER_STAIN_NAMES.has(finish.name)) return 'Water Stains';
-		return 'Benjamin Moore Zero-VOC Paint';
-	}
-
-	const CATEGORY_ORDER = [
-		'Vermont Natural Coatings',
-		'Benjamin Moore Zero-VOC Paint',
-		'Water Stains',
-		'Benjamin Moore Natura',
-	];
-
 	const groups = $derived.by(() => {
 		const map = new Map<string, Finish[]>();
-		for (const cat of CATEGORY_ORDER) map.set(cat, []);
 		for (const finish of data.finishes) {
-			const cat = getCategory(finish);
+			const cat = finish.category?.name ?? 'Other';
 			if (!map.has(cat)) map.set(cat, []);
 			map.get(cat)!.push(finish);
 		}
-		return [...map.entries()].filter(([, items]) => items.length > 0);
+		return [...map.entries()].sort(([a], [b]) => {
+			if (a === 'Other') return 1;
+			if (b === 'Other') return -1;
+			return 0;
+		});
 	});
 
 	let selected = $state<Finish | null>(null);
@@ -262,8 +230,8 @@
 								</div>
 								<div class="finish-info">
 									<span class="finish-name">{finish.name}</span>
-									{#if finish.priceModifier > 0}
-										<span class="finish-price">+${finish.priceModifier}</span>
+									{#if finish.effectivePriceModifier > 0}
+										<span class="finish-price">+${finish.effectivePriceModifier}</span>
 									{:else}
 										<span class="finish-included">Included</span>
 									{/if}
@@ -338,7 +306,7 @@
 				<h3>{selected.name}</h3>
 				{#if selected.description}<p>{selected.description}</p>{/if}
 				<p class="detail-price">
-					{#if selected.priceModifier > 0}Upcharge: <strong>+${selected.priceModifier}</strong>
+					{#if selected.effectivePriceModifier > 0}Upcharge: <strong>+${selected.effectivePriceModifier}</strong>
 					{:else}<strong>Included</strong> — no upcharge{/if}
 				</p>
 				<a href="/collections" class="btn btn-primary">Configure Your Bed</a>

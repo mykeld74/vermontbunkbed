@@ -10,7 +10,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const discount = await sanityClient.fetch(
 		`*[_type == "discount" && code == $code && active == true][0] {
-			_id, code, label, percentOff, expiresAt, maxUses, usedCount
+			_id, code, label, discountType, percentOff, amountOff, expiresAt, maxUses, usedCount
 		}`,
 		{ code: normalized }
 	);
@@ -19,12 +19,10 @@ export const POST: RequestHandler = async ({ request }) => {
 		return json({ valid: false, message: 'Invalid or inactive discount code.' });
 	}
 
-	// Check expiration
 	if (discount.expiresAt && new Date(discount.expiresAt) < new Date()) {
 		return json({ valid: false, message: 'This discount code has expired.' });
 	}
 
-	// Check usage cap
 	if (discount.maxUses != null && (discount.usedCount ?? 0) >= discount.maxUses) {
 		return json({ valid: false, message: 'This discount code has reached its usage limit.' });
 	}
@@ -34,6 +32,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		discountId: discount._id,
 		code: discount.code,
 		label: discount.label,
-		percentOff: discount.percentOff
+		discountType: discount.discountType ?? 'percent',
+		percentOff: discount.percentOff ?? 0,
+		amountOff: discount.amountOff ?? 0,
 	});
 };

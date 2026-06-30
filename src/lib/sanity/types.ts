@@ -44,13 +44,21 @@ export interface Collection {
 	productPrices: CollectionProduct[];
 }
 
+export interface FinishCategory {
+	_id: string;
+	name: string;
+	defaultPriceModifier: number;
+}
+
 export interface Finish {
 	_id: string;
 	name: string;
 	slug: { current: string };
 	description: string;
 	image: SanityImage;
-	priceModifier: number;
+	category?: FinishCategory;
+	priceModifier?: number;
+	effectivePriceModifier: number;
 }
 
 export interface SiteSettings {
