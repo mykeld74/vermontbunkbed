@@ -10,9 +10,9 @@
 	let scrollY = $state(0);
 
 	const LOGO_START = 140;
-	const LOGO_MIN   = 100;
-	const NAV_START  = 156; // LOGO_START + 16px padding (8px top/bottom)
-	const NAV_MIN    = 60;
+	const LOGO_MIN = 110;
+	const NAV_START = 162; // LOGO_START + 16px padding (8px top/bottom)
+	const NAV_MIN = 80;
 	const SCROLL_RANGE = 120; // px of scroll over which shrinking happens
 
 	// Clamp progress 0→1 over SCROLL_RANGE
@@ -31,18 +31,41 @@
 			</a>
 
 			<nav class="main-nav" class:open={mobileMenuOpen}>
-				<a href="/collections" class:active={$page.url.pathname.startsWith('/collections')} onclick={() => (mobileMenuOpen = false)}>Collections</a>
-				<a href="/about" class:active={$page.url.pathname === '/about'} onclick={() => (mobileMenuOpen = false)}>Our Story</a>
-				<a href="/finishes" class:active={$page.url.pathname.startsWith('/finishes')} onclick={() => (mobileMenuOpen = false)}>Finishes</a>
-				<a href="/contact" class:active={$page.url.pathname.startsWith('/contact')} onclick={() => (mobileMenuOpen = false)}>Contact</a>
+				<a
+					href="/collections"
+					class:active={$page.url.pathname.startsWith('/collections')}
+					onclick={() => (mobileMenuOpen = false)}>Collections</a
+				>
+				<a
+					href="/about"
+					class:active={$page.url.pathname === '/about'}
+					onclick={() => (mobileMenuOpen = false)}>Our Story</a
+				>
+				<a
+					href="/finishes"
+					class:active={$page.url.pathname.startsWith('/finishes')}
+					onclick={() => (mobileMenuOpen = false)}>Finishes</a
+				>
+				<a
+					href="/contact"
+					class:active={$page.url.pathname.startsWith('/contact')}
+					onclick={() => (mobileMenuOpen = false)}>Contact</a
+				>
 			</nav>
 
 			<div class="header-actions">
 				<a href="/cart" class="cart-btn" aria-label="Cart">
-					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-						<line x1="3" y1="6" x2="21" y2="6"/>
-						<path d="M16 10a4 4 0 01-8 0"/>
+					<svg
+						width="22"
+						height="22"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+						<line x1="3" y1="6" x2="21" y2="6" />
+						<path d="M16 10a4 4 0 01-8 0" />
 					</svg>
 					{#if cart.count > 0}
 						<span class="cart-count">{cart.count}</span>
@@ -55,12 +78,31 @@
 					onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
 				>
 					{#if mobileMenuOpen}
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
 						</svg>
 					{:else}
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line
+								x1="3"
+								y1="18"
+								x2="21"
+								y2="18"
+							/>
 						</svg>
 					{/if}
 				</button>
@@ -78,7 +120,9 @@
 				<a href="/" class="logo logo-light">
 					<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img logo-img-light" />
 				</a>
-				<p>Handcrafted solid wood bunk beds built on our small family farm in Starksboro, Vermont.</p>
+				<p>
+					Handcrafted solid wood bunk beds built on our small family farm in Starksboro, Vermont.
+				</p>
 			</div>
 
 			<div class="footer-links">
@@ -104,8 +148,14 @@
 </div>
 
 <style>
-	.site-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
-	.site-main { flex: 1; }
+	.site-wrapper {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+	}
+	.site-main {
+		flex: 1;
+	}
 
 	/* Header */
 	.site-header {
@@ -113,8 +163,6 @@
 		top: 0;
 		z-index: 100;
 		background: var(--color-warm-white);
-		border-bottom: 1px solid var(--color-tan-light);
-		box-shadow: var(--shadow-sm);
 		overflow: visible;
 	}
 
@@ -141,6 +189,9 @@
 		gap: 10px;
 		text-decoration: none;
 		flex-shrink: 0;
+		padding: 5px;
+		border-radius: 1000px;
+		background: var(--color-warm-white);
 	}
 
 	.logo-img {
@@ -171,7 +222,9 @@
 		color: var(--color-body);
 		padding-bottom: 2px;
 		border-bottom: 2px solid transparent;
-		transition: color 0.2s, border-color 0.2s;
+		transition:
+			color 0.2s,
+			border-color 0.2s;
 	}
 
 	.main-nav a:hover,
@@ -181,7 +234,11 @@
 	}
 
 	/* Header actions */
-	.header-actions { display: flex; align-items: center; gap: 8px; }
+	.header-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
 
 	.cart-btn {
 		position: relative;
@@ -192,10 +249,15 @@
 		justify-content: center;
 		color: var(--color-charcoal);
 		border-radius: var(--radius-sm);
-		transition: background 0.2s, color 0.2s;
+		transition:
+			background 0.2s,
+			color 0.2s;
 	}
 
-	.cart-btn:hover { background: var(--color-tan-light); color: var(--color-bark); }
+	.cart-btn:hover {
+		background: var(--color-tan-light);
+		color: var(--color-bark);
+	}
 
 	.cart-count {
 		position: absolute;
@@ -226,12 +288,14 @@
 		transition: background 0.2s;
 	}
 
-	.mobile-menu-btn:hover { background: var(--color-tan-light); }
+	.mobile-menu-btn:hover {
+		background: var(--color-tan-light);
+	}
 
 	/* Footer */
 	.site-footer {
 		background: var(--color-charcoal);
-		color: rgba(255,255,255,0.75);
+		color: rgba(255, 255, 255, 0.75);
 		margin-top: auto;
 	}
 
@@ -249,7 +313,10 @@
 		line-height: 1.7;
 	}
 
-	.footer-links { display: flex; gap: 64px; }
+	.footer-links {
+		display: flex;
+		gap: 64px;
+	}
 
 	.footer-col {
 		display: flex;
@@ -268,17 +335,22 @@
 
 	.footer-col a {
 		font-size: 0.9rem;
-		color: rgba(255,255,255,0.65);
+		color: rgba(255, 255, 255, 0.65);
 		transition: color 0.2s;
 	}
-	.footer-col a:hover { color: var(--color-tan); }
+	.footer-col a:hover {
+		color: var(--color-tan);
+	}
 
 	.footer-bottom {
-		border-top: 1px solid rgba(255,255,255,0.1);
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
 		padding: 20px 24px;
 	}
 
-	.footer-bottom p { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
+	.footer-bottom p {
+		font-size: 0.8rem;
+		color: rgba(255, 255, 255, 0.4);
+	}
 
 	/* Mobile */
 	@media (max-width: 768px) {
@@ -295,7 +367,9 @@
 			box-shadow: var(--shadow-md);
 		}
 
-		.main-nav.open { display: flex; }
+		.main-nav.open {
+			display: flex;
+		}
 
 		.main-nav a {
 			width: 100%;
@@ -304,9 +378,17 @@
 			border-bottom-width: 1px;
 		}
 
-		.mobile-menu-btn { display: flex; }
+		.mobile-menu-btn {
+			display: flex;
+		}
 
-		.footer-inner { grid-template-columns: 1fr; gap: 40px; }
-		.footer-links { flex-wrap: wrap; gap: 40px; }
+		.footer-inner {
+			grid-template-columns: 1fr;
+			gap: 40px;
+		}
+		.footer-links {
+			flex-wrap: wrap;
+			gap: 40px;
+		}
 	}
 </style>
