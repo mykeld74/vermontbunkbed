@@ -7,13 +7,27 @@
 	let { children } = $props();
 
 	let mobileMenuOpen = $state(false);
+	let scrollY = $state(0);
+
+	const LOGO_START = 140;
+	const LOGO_MIN   = 100;
+	const NAV_START  = 156; // LOGO_START + 16px padding (8px top/bottom)
+	const NAV_MIN    = 60;
+	const SCROLL_RANGE = 120; // px of scroll over which shrinking happens
+
+	// Clamp progress 0→1 over SCROLL_RANGE
+	const progress = $derived(Math.min(scrollY / SCROLL_RANGE, 1));
+	const logoSize = $derived(LOGO_START - (LOGO_START - LOGO_MIN) * progress);
+	const navHeight = $derived(NAV_START - (NAV_START - NAV_MIN) * progress);
 </script>
 
+<svelte:window bind:scrollY />
+
 <div class="site-wrapper">
-	<header class="site-header">
+	<header class="site-header" style="height: {navHeight}px;">
 		<div class="container header-inner">
 			<a href="/" class="logo" onclick={() => (mobileMenuOpen = false)}>
-				<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img" />
+				<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img" style="height: {logoSize}px;" />
 			</a>
 
 			<nav class="main-nav" class:open={mobileMenuOpen}>
@@ -101,29 +115,38 @@
 		background: var(--color-warm-white);
 		border-bottom: 1px solid var(--color-tan-light);
 		box-shadow: var(--shadow-sm);
+		overflow: visible;
 	}
 
 	.header-inner {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-between;
-		height: 96px;
+		height: 100%;
 		gap: 32px;
+		padding-top: 8px;
+	}
+
+	/* Nav links vertically centered within the shrinking header */
+	.header-inner > nav,
+	.header-inner > .header-actions {
+		margin-top: auto;
+		margin-bottom: auto;
 	}
 
 	/* Logo */
 	.logo {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 10px;
 		text-decoration: none;
 		flex-shrink: 0;
 	}
 
 	.logo-img {
-		height: 80px;
 		width: auto;
 		display: block;
+		/* height driven by inline style */
 	}
 
 	.logo-img-light {
