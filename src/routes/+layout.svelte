@@ -117,8 +117,8 @@
 	<footer class="site-footer">
 		<div class="container footer-inner">
 			<div class="footer-brand">
-				<a href="/" class="logo logo-light">
-					<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img logo-img-light" />
+				<a href="/" class="footer-logo">
+					<img src={logoImg} alt="Vermont Bunk Beds" class="logo-img" />
 				</a>
 				<p>
 					Handcrafted solid wood bunk beds built on our small family farm in Starksboro, Vermont.
@@ -197,6 +197,8 @@
 	.logo-img {
 		width: auto;
 		display: block;
+		max-width: 150px;
+
 		/* height driven by inline style */
 	}
 
@@ -306,11 +308,23 @@
 		padding: 64px 24px;
 	}
 
+	.footer-brand {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	.footer-logo {
+		display: flex;
+		flex-shrink: 0;
+		text-decoration: none;
+	}
+
 	.footer-brand p {
-		margin-top: 16px;
 		font-size: 0.9rem;
-		max-width: 280px;
+		max-width: 240px;
 		line-height: 1.7;
+		color: rgba(255,255,255,0.65);
 	}
 
 	.footer-links {
