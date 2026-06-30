@@ -32,6 +32,22 @@
 
 	const selectedFinish = $derived(data.finishes.find((f) => f._id === selectedFinishId));
 
+	// Top size options depend on bottom: twin→[twin], full→[twin,full], queen→all
+	const allowedTopSizes = $derived.by(() => {
+		if (!selectedProduct?.productType.allowTopBottomMix) return selectedProduct?.productType.availableSizes ?? [];
+		const all = selectedProduct.productType.availableSizes ?? [];
+		if (bottomSize === 'twin') return all.filter((s) => s === 'twin');
+		if (bottomSize === 'full') return all.filter((s) => s === 'twin' || s === 'full');
+		return all; // queen → any
+	});
+
+	// Reset top size if it's no longer allowed after a bottom change
+	$effect(() => {
+		if (!allowedTopSizes.includes(topSize)) {
+			topSize = allowedTopSizes[0] ?? 'twin';
+		}
+	});
+
 	const finishGroups = $derived.by(() => {
 		const map = new Map<string, Finish[]>();
 		for (const finish of data.finishes) {
@@ -165,24 +181,49 @@
 
 					{#if selectedProduct.productType.allowTopBottomMix}
 						<div class="size-mix-grid">
-							{#each ['Top Bunk', 'Bottom Bunk'] as label, i}
-								<div class="size-group">
-									<p class="size-group-label">{label}</p>
-									<div class="size-options">
-										{#each selectedProduct.productType.availableSizes as size (size)}
-											{@const upcharge = getSizeUpcharge(selectedProduct, size)}
-											<button
-												class="size-btn"
-												class:selected={i === 0 ? topSize === size : bottomSize === size}
-												onclick={() => i === 0 ? (topSize = size) : (bottomSize = size)}
-											>
-												<span>{size.charAt(0).toUpperCase() + size.slice(1)}</span>
-												{#if upcharge > 0}<small>+${upcharge}</small>{/if}
-											</button>
-										{/each}
-									</div>
+							<!-- Bottom Bunk first -->
+							<div class="size-group">
+								<p class="size-group-label">Bottom Bunk</p>
+								<div class="size-options">
+									{#each selectedProduct.productType.availableSizes as size (size)}
+										{@const upcharge = getSizeUpcharge(selectedProduct, size)}
+										<button
+											class="size-btn"
+											class:selected={bottomSize === size}
+											onclick={() => (bottomSize = size)}
+										>
+											<span>{size.charAt(0).toUpperCase() + size.slice(1)}</span>
+											{#if upcharge > 0}<small>+${upcharge}</small>{/if}
+										</button>
+									{/each}
 								</div>
-							{/each}
+							</div>
+							<!-- Top Bunk — options constrained by bottom selection -->
+							<div class="size-group">
+								<p class="size-group-label">
+								Top Bunk
+								<span class="size-tooltip-wrap">
+									<span class="size-tooltip-icon">?</span>
+									<span class="size-tooltip-text">Top bunk must be equal to or smaller than the bottom bunk.</span>
+								</span>
+							</p>
+								<div class="size-options">
+									{#each selectedProduct.productType.availableSizes as size (size)}
+										{@const upcharge = getSizeUpcharge(selectedProduct, size)}
+										{@const allowed = allowedTopSizes.includes(size)}
+										<button
+											class="size-btn"
+											class:selected={topSize === size}
+											class:unavailable={!allowed}
+											disabled={!allowed}
+											onclick={() => (topSize = size)}
+										>
+											<span>{size.charAt(0).toUpperCase() + size.slice(1)}</span>
+											{#if upcharge > 0}<small>+${upcharge}</small>{/if}
+										</button>
+									{/each}
+								</div>
+							</div>
 						</div>
 					{:else}
 						<div class="size-options">
@@ -287,11 +328,11 @@
 						<div class="summary-line summary-sub">
 							<span>
 								{selectedProduct.productType.allowTopBottomMix
-									? `${topSize.charAt(0).toUpperCase() + topSize.slice(1)} top / ${bottomSize.charAt(0).toUpperCase() + bottomSize.slice(1)} bottom`
+									? `${bottomSize.charAt(0).toUpperCase() + bottomSize.slice(1)} bottom / ${topSize.charAt(0).toUpperCase() + topSize.slice(1)} top`
 									: `${topSize.charAt(0).toUpperCase() + topSize.slice(1)}`}
 							</span>
-							{#if getSizeUpcharge(selectedProduct, topSize) > 0}
-								<span>+${getSizeUpcharge(selectedProduct, topSize)}</span>
+							{#if getSizeUpcharge(selectedProduct, topSize) + getSizeUpcharge(selectedProduct, bottomSize) > 0}
+								<span>+${getSizeUpcharge(selectedProduct, topSize) + getSizeUpcharge(selectedProduct, bottomSize)}</span>
 							{/if}
 						</div>
 					{/if}
@@ -479,13 +520,19 @@
 		transition: border-color 0.2s, background 0.2s;
 	}
 
-	.size-btn:hover { border-color: var(--color-tan); }
+	.size-btn:hover:not(:disabled) { border-color: var(--color-tan); }
 	.size-btn.selected { border-color: var(--color-bark); background: #fdf5ee; }
+	.size-btn.unavailable { opacity: 0.35; cursor: not-allowed; }
 	.size-btn span { font-weight: 600; color: var(--color-charcoal); font-size: 0.95rem; }
 	.size-btn small { color: var(--color-bark); font-size: 0.75rem; margin-top: 2px; }
 
 	.size-mix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-	.size-group-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px; }
+	.size-group-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+	.size-tooltip-wrap { position: relative; display: inline-flex; align-items: center; }
+	.size-tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; background: var(--color-muted); color: #fff; font-size: 0.65rem; font-weight: 700; cursor: default; line-height: 1; text-transform: none; letter-spacing: 0; }
+	.size-tooltip-text { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--color-charcoal); color: #fff; font-size: 0.72rem; font-weight: 400; letter-spacing: 0; text-transform: none; white-space: nowrap; padding: 5px 9px; border-radius: 4px; pointer-events: none; z-index: 10; }
+	.size-tooltip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--color-charcoal); }
+	.size-tooltip-wrap:hover .size-tooltip-text { display: block; }
 
 	/* Add-on buttons */
 	.addon-grid { display: flex; flex-direction: column; gap: 10px; }

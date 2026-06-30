@@ -141,7 +141,7 @@
 						<h3 class="item-name">{item.productTypeName}</h3>
 						<div class="item-details">
 							<span>
-								Size: {item.topSize.charAt(0).toUpperCase() + item.topSize.slice(1)}{#if item.bottomSize && item.bottomSize !== item.topSize} top / {item.bottomSize.charAt(0).toUpperCase() + item.bottomSize.slice(1)} bottom{/if}
+								Size: {#if item.bottomSize}{item.bottomSize.charAt(0).toUpperCase() + item.bottomSize.slice(1)} bottom / {item.topSize.charAt(0).toUpperCase() + item.topSize.slice(1)} top{:else}{item.topSize.charAt(0).toUpperCase() + item.topSize.slice(1)}{/if}
 							</span>
 							<span>Finish: {item.finishName}</span>
 							{#if item.addonNames.length > 0}

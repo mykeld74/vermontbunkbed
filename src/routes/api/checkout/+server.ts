@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 
 	const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item) => {
 		const description = [
-			`Size: ${item.topSize}${item.bottomSize ? ` / ${item.bottomSize} (bottom)` : ''}`,
+			item.bottomSize ? `Size: ${item.bottomSize} bottom / ${item.topSize} top` : `Size: ${item.topSize}`,
 			`Finish: ${item.finishName}`,
 			...(item.addonNames.length ? [`Add-ons: ${item.addonNames.join(', ')}`] : [])
 		].join(' | ');
