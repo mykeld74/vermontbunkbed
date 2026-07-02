@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/auth.schema';
@@ -13,22 +13,25 @@ function requireAdmin(locals: App.Locals) {
 	}
 }
 
-export const load: PageServerLoad = async ({ locals, request }) => {
+export const load: PageServerLoad = async ({ locals }) => {
 	requireAdmin(locals);
 
-	const result = await auth.api.listUsers({
-		headers: request.headers,
-		query: {
-			limit: 100,
-			sortBy: 'createdAt',
-			sortDirection: 'desc'
-		}
-	});
+	const users = await db
+		.select({
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			role: user.role,
+			createdAt: user.createdAt
+		})
+		.from(user)
+		.orderBy(desc(user.createdAt))
+		.limit(100);
 
 	return {
-		users: result.users,
+		users,
 		currentUserId: locals.user!.id,
-		pendingCount: result.users.filter((dashboardUser) => !getDashboardRole(dashboardUser)).length
+		pendingCount: users.filter((dashboardUser) => !getDashboardRole(dashboardUser)).length
 	};
 };
 

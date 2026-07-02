@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import { navigating, page } from '$app/state';
 	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
@@ -12,12 +12,21 @@
 </script>
 
 <div class="admin-shell">
+	{#if navigating.to}
+		<div class="admin-nav-progress" aria-hidden="true"></div>
+	{/if}
 	<header class="admin-header">
 		<div class="admin-header-left">
-			<a href="/admin" class="admin-logo">Vermont Bunk Beds — Admin</a>
+			<a href="/admin" class="admin-logo" data-sveltekit-preload-data="tap">Vermont Bunk Beds — Admin</a>
 			<nav class="admin-nav" aria-label="Admin">
-				{#each navItems as item}
-					<a href={item.href} class:active={page.url.pathname === item.href}>{item.label}</a>
+				{#each navItems as item (item.href)}
+					<a
+						href={item.href}
+						class:active={page.url.pathname === item.href}
+						data-sveltekit-preload-data="tap"
+					>
+						{item.label}
+					</a>
 				{/each}
 			</nav>
 		</div>
@@ -29,7 +38,7 @@
 			</form>
 		</div>
 	</header>
-	<main class="admin-main">
+	<main class="admin-main" class:admin-main--loading={Boolean(navigating.to)}>
 		{@render children()}
 	</main>
 </div>

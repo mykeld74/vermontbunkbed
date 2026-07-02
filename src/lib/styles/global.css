@@ -207,6 +207,39 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 .admin-shell {
 	min-height: 100vh;
 	background: var(--color-admin-bg);
+	position: relative;
+}
+
+.admin-nav-progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	z-index: 100;
+	background: linear-gradient(
+		90deg,
+		transparent 0%,
+		var(--color-bark) 35%,
+		var(--color-bark) 65%,
+		transparent 100%
+	);
+	background-size: 200% 100%;
+	animation: admin-nav-progress 0.9s ease-in-out infinite;
+}
+
+@keyframes admin-nav-progress {
+	from {
+		background-position: 100% 0;
+	}
+	to {
+		background-position: -100% 0;
+	}
+}
+
+.admin-main--loading {
+	opacity: 0.72;
+	pointer-events: none;
 }
 
 .admin-header {
