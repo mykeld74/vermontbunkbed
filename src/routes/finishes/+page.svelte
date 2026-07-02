@@ -4,128 +4,6 @@
 	import { urlFor } from '$lib/sanity/client';
 	import coatingsImg from '$lib/assets/coatings.jpg';
 
-	// Natura (milk paint) individual swatches
-	import naturaReverentGray from '$lib/assets/natura/reverent-gray.png';
-	import naturaMillstone from '$lib/assets/natura/millstone.png';
-	import naturaDarkChocolate from '$lib/assets/natura/dark-chocolate.png';
-	import naturaSeagullGray from '$lib/assets/natura/seagull-gray.png';
-	import naturaLampBlack from '$lib/assets/natura/lamp-black.png';
-	import naturaPersianBlue from '$lib/assets/natura/persian-blue.png';
-	import naturaGulfStreamBlue from '$lib/assets/natura/gulf-stream-blue.png';
-	import naturaKeyWestBlue from '$lib/assets/natura/key-west-blue.png';
-	import naturaCoastalBlue from '$lib/assets/natura/coastal-blue.png';
-	import naturaTwilight from '$lib/assets/natura/twilight.png';
-	import naturaBalletPink from '$lib/assets/natura/ballet-pink.png';
-	import naturaCoralCrush from '$lib/assets/natura/coral-crush.png';
-	import naturaEmerald from '$lib/assets/natura/emerald.png';
-	import naturaWestminsterGreen from '$lib/assets/natura/westminster-green.png';
-	import naturaHarvestYellow from '$lib/assets/natura/harvest-yellow.png';
-	import naturaSunglow from '$lib/assets/natura/sunglow.png';
-	import naturaSnowWhite from '$lib/assets/natura/snow-white.png';
-	import naturaAlabaster from '$lib/assets/natura/alabaster.png';
-	import naturaAntiqueWhite from '$lib/assets/natura/antique-white.png';
-	import naturaLinen from '$lib/assets/natura/linen.png';
-	import naturaEmpireGray from '$lib/assets/natura/empire-gray.png';
-	import naturaPerfectGray from '$lib/assets/natura/perfect-gray.png';
-	import naturaDriftwood from '$lib/assets/natura/driftwood.png';
-	import naturaQueenstownGray from '$lib/assets/natura/queenstown-gray.png';
-	import naturaHalcyonBlue from '$lib/assets/natura/halcyon-blue.png';
-	import naturaBlueMoon from '$lib/assets/natura/blue-moon.png';
-	import naturaKleinBlue from '$lib/assets/natura/klein-blue.png';
-	import naturaChinaBlue from '$lib/assets/natura/china-blue.png';
-	import naturaHolidayRed from '$lib/assets/natura/holiday-red.png';
-	import naturaTuscanRed from '$lib/assets/natura/tuscan-red.png';
-	import naturaPatina from '$lib/assets/natura/patina-green.png';
-	import naturaBasil from '$lib/assets/natura/basil.png';
-	import naturaPersimmon from '$lib/assets/natura/persimmon.png';
-
-	interface NaturaSwatch { name: string; img: string }
-
-	const NATURA_SWATCHES: NaturaSwatch[] = [
-		{ name: 'Snow White', img: naturaSnowWhite },
-		{ name: 'Alabaster', img: naturaAlabaster },
-		{ name: 'Antique White', img: naturaAntiqueWhite },
-		{ name: 'Linen', img: naturaLinen },
-		{ name: 'Reverent Gray', img: naturaReverentGray },
-		{ name: 'Millstone', img: naturaMillstone },
-		{ name: 'Empire Gray', img: naturaEmpireGray },
-		{ name: 'Perfect Gray', img: naturaPerfectGray },
-		{ name: 'Seagull Gray', img: naturaSeagullGray },
-		{ name: 'Driftwood', img: naturaDriftwood },
-		{ name: 'Queenstown Gray', img: naturaQueenstownGray },
-		{ name: 'Dark Chocolate', img: naturaDarkChocolate },
-		{ name: 'Lamp Black', img: naturaLampBlack },
-		{ name: 'Coastal Blue', img: naturaCoastalBlue },
-		{ name: 'Twilight', img: naturaTwilight },
-		{ name: 'China Blue', img: naturaChinaBlue },
-		{ name: 'Klein Blue', img: naturaKleinBlue },
-		{ name: 'Blue Moon', img: naturaBlueMoon },
-		{ name: 'Halcyon Blue', img: naturaHalcyonBlue },
-		{ name: 'Persian Blue', img: naturaPersianBlue },
-		{ name: 'Gulf Stream Blue', img: naturaGulfStreamBlue },
-		{ name: 'Key West Blue', img: naturaKeyWestBlue },
-		{ name: 'Patina Green', img: naturaPatina },
-		{ name: 'Basil', img: naturaBasil },
-		{ name: 'Emerald', img: naturaEmerald },
-		{ name: 'Westminster Green', img: naturaWestminsterGreen },
-		{ name: 'Ballet Pink', img: naturaBalletPink },
-		{ name: 'Coral Crush', img: naturaCoralCrush },
-		{ name: 'Holiday Red', img: naturaHolidayRed },
-		{ name: 'Tuscan Red', img: naturaTuscanRed },
-		{ name: 'Harvest Yellow', img: naturaHarvestYellow },
-		{ name: 'Sunglow', img: naturaSunglow },
-		{ name: 'Persimmon', img: naturaPersimmon },
-	];
-
-	// Individual stain swatches cropped from chart images
-	import whitewashMaple from '$lib/assets/stains/whitewash-maple.jpg';
-	import naturalMaple from '$lib/assets/stains/natural-maple.jpg';
-	import antiqueOakMaple from '$lib/assets/stains/antique-oak-maple.jpg';
-	import graystoneMaple from '$lib/assets/stains/graystone-maple.jpg';
-	import hickoryMaple from '$lib/assets/stains/hickory-maple.jpg';
-	import antiqueBrownMaple from '$lib/assets/stains/antique-brown-maple.jpg';
-	import brownMahoganyMaple from '$lib/assets/stains/brown-mahogany-maple.jpg';
-	import provincialMaple from '$lib/assets/stains/provincial-maple.jpg';
-	import onyxMaple from '$lib/assets/stains/onyx-maple.jpg';
-	import blackMaple from '$lib/assets/stains/black-maple.jpg';
-	import walnutMaple from '$lib/assets/stains/walnut-maple.jpg';
-	import pecanMaple from '$lib/assets/stains/pecan-maple.jpg';
-	import blackCherryMaple from '$lib/assets/stains/black-cherry-maple.jpg';
-	import sedonaMaple from '$lib/assets/stains/sedona-maple.jpg';
-	import cabernetMaple from '$lib/assets/stains/cabernet-maple.jpg';
-	import tobaccoMaple from '$lib/assets/stains/tobacco-maple.jpg';
-	import espressoMaple from '$lib/assets/stains/espresso-maple.jpg';
-	import graphiteMaple from '$lib/assets/stains/graphite-maple.jpg';
-
-	interface StainSwatch { name: string; wood: string; img: string }
-
-	const WATER_STAINS: StainSwatch[] = [
-		{ name: 'White Wash', wood: 'Maple', img: whitewashMaple },
-		{ name: 'Natural', wood: 'Maple', img: naturalMaple },
-		{ name: 'Antique Oak', wood: 'Maple', img: antiqueOakMaple },
-		{ name: 'Graystone', wood: 'Maple', img: graystoneMaple },
-		{ name: 'Hickory', wood: 'Maple', img: hickoryMaple },
-		{ name: 'Antique Brown', wood: 'Maple', img: antiqueBrownMaple },
-		{ name: 'Brown Mahogany', wood: 'Maple', img: brownMahoganyMaple },
-		{ name: 'Provincial', wood: 'Maple', img: provincialMaple },
-		{ name: 'Onyx', wood: 'Maple', img: onyxMaple },
-		{ name: 'Black', wood: 'Maple', img: blackMaple },
-		{ name: 'Walnut', wood: 'Maple', img: walnutMaple },
-		{ name: 'Pecan', wood: 'Maple', img: pecanMaple },
-		{ name: 'Black Cherry', wood: 'Maple', img: blackCherryMaple },
-		{ name: 'Sedona', wood: 'Maple', img: sedonaMaple },
-		{ name: 'Cabernet', wood: 'Maple', img: cabernetMaple },
-		{ name: 'Tobacco', wood: 'Maple', img: tobaccoMaple },
-		{ name: 'Espresso', wood: 'Maple', img: espressoMaple },
-		{ name: 'Graphite', wood: 'Maple', img: graphiteMaple },
-	];
-
-	const stainWoodFilter = $state<'Maple' | 'Oak' | 'All'>('All');
-
-	const filteredStains = $derived(
-		stainWoodFilter === 'All' ? WATER_STAINS : WATER_STAINS.filter(s => s.wood === stainWoodFilter)
-	);
-
 	let { data }: { data: PageData } = $props();
 
 	const groups = $derived.by(() => {
@@ -167,7 +45,6 @@
 	<section class="finish-section section-natural">
 		<div class="container section-inner">
 			<div class="section-text">
-				<p class="eyebrow-dark">Section 1</p>
 				<h2>Vermont Natural Coatings</h2>
 				<div class="divider" aria-hidden="true"></div>
 				<p>We use <strong>PolyWhey®</strong> — a naturally derived, No-VOC &amp; Non-Toxic wood finish made right here in Vermont. It's a water-based polyurethane that brings out the natural beauty of the wood while providing a durable, food-safe protective coat.</p>
@@ -208,13 +85,12 @@
 	<!-- Section 2: Benjamin Moore Zero-VOC -->
 	<section class="finish-section section-paint">
 		<div class="container">
-			<p class="eyebrow-dark">Section 2</p>
 			<h2>Benjamin Moore Zero-VOC Paint Colors</h2>
 			<div class="divider" aria-hidden="true"></div>
 			<p class="section-desc">All of our painted finishes use <strong>Benjamin Moore Aura</strong> — the highest quality Zero-VOC interior paint available. Choose from our hand-selected palette of 22 colors, or request any Benjamin Moore color. All are safe for your family and durable enough for years of use.</p>
 
 			{#each groups as [cat, finishes]}
-				{#if cat === 'Benjamin Moore Zero-VOC Paint'}
+				{#if cat === 'Zero-VOC'}
 					<div class="finish-grid">
 						{#each finishes as finish (finish._id)}
 							<button
@@ -245,50 +121,81 @@
 		</div>
 	</section>
 
-	<!-- Section 3: Water Stains -->
-	<section class="finish-section section-stain">
-		<div class="container">
-			<p class="eyebrow-dark">Section 3</p>
-			<h2>Water Stains</h2>
-			<div class="divider" aria-hidden="true"></div>
-			<p class="section-desc">Water-based stains from <strong>General Finishes</strong> let the natural wood grain show through while adding rich, lasting color. Non-toxic and durable — shown here on maple and oak.</p>
-
-			<div class="stain-grid">
-				{#each filteredStains as stain}
-					<div class="stain-card">
-						<div class="swatch-wrap">
-							<img src={stain.img} alt="{stain.name} on {stain.wood}" />
-						</div>
-						<div class="finish-info">
-							<span class="finish-name">{stain.name}</span>
-							<span class="stain-wood">on {stain.wood}</span>
-						</div>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- Section 4: Benjamin Moore Natura -->
+	<!-- Section 3: Benjamin Moore Natura -->
 	<section class="finish-section section-natura">
 		<div class="container">
-			<p class="eyebrow-dark">Section 4</p>
 			<h2>Benjamin Moore Natura</h2>
 			<div class="divider" aria-hidden="true"></div>
 			<p class="section-desc">Benjamin Moore <strong>Natura®</strong> is their asthma &amp; allergy friendly paint line — Zero-VOC, washable, and available in thousands of colors. If you have a specific color in mind that isn't in our standard palette, Natura is likely the path.</p>
 
-			<div class="natura-grid">
-				{#each NATURA_SWATCHES as swatch}
-					<div class="natura-card">
-						<div class="swatch-wrap">
-							<img src={swatch.img} alt={swatch.name} />
-						</div>
-						<div class="finish-info">
-							<span class="finish-name">{swatch.name}</span>
-						</div>
+			{#each groups as [cat, finishes]}
+				{#if cat === 'Natura'}
+					<div class="finish-grid">
+						{#each finishes as finish (finish._id)}
+							<button
+								class="finish-card"
+								class:active={selected?._id === finish._id}
+								onclick={() => selected = selected?._id === finish._id ? null : finish}
+							>
+								<div class="swatch-wrap">
+									{#if finish.image}
+										<img src={urlFor(finish.image).width(200).height(200).fit('crop').url()} alt={finish.name} />
+									{:else}
+										<div class="swatch-placeholder">{finish.name.charAt(0)}</div>
+									{/if}
+								</div>
+								<div class="finish-info">
+									<span class="finish-name">{finish.name}</span>
+									{#if finish.effectivePriceModifier > 0}
+										<span class="finish-price">+${finish.effectivePriceModifier}</span>
+									{:else}
+										<span class="finish-included">Included</span>
+									{/if}
+								</div>
+							</button>
+						{/each}
 					</div>
-				{/each}
-			</div>
+				{/if}
+			{/each}
+		</div>
+	</section>
+
+	<!-- Section 4: Water Stains -->
+	<section class="finish-section section-stain">
+		<div class="container">
+			<h2>Water Stains</h2>
+			<div class="divider" aria-hidden="true"></div>
+			<p class="section-desc">Water-based stains from <strong>General Finishes</strong> let the natural wood grain show through while adding rich, lasting color. Non-toxic and durable — shown here on maple.</p>
+
+			{#each groups as [cat, finishes]}
+				{#if cat === 'Water Stains'}
+					<div class="finish-grid">
+						{#each finishes as finish (finish._id)}
+							<button
+								class="finish-card"
+								class:active={selected?._id === finish._id}
+								onclick={() => selected = selected?._id === finish._id ? null : finish}
+							>
+								<div class="swatch-wrap">
+									{#if finish.image}
+										<img src={urlFor(finish.image).width(200).height(200).fit('crop').url()} alt={finish.name} />
+									{:else}
+										<div class="swatch-placeholder">{finish.name.charAt(0)}</div>
+									{/if}
+								</div>
+								<div class="finish-info">
+									<span class="finish-name">{finish.name}</span>
+									{#if finish.effectivePriceModifier > 0}
+										<span class="finish-price">+${finish.effectivePriceModifier}</span>
+									{:else}
+										<span class="finish-included">Included</span>
+									{/if}
+								</div>
+							</button>
+						{/each}
+					</div>
+				{/if}
+			{/each}
 		</div>
 	</section>
 
@@ -381,15 +288,6 @@
 	.section-stain { background: var(--color-warm-white); }
 	.section-natura { background: var(--color-cream); }
 
-	.eyebrow-dark {
-		font-size: 0.7rem;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-		color: var(--color-muted);
-		font-weight: 600;
-		margin-bottom: 8px;
-	}
-
 	.finish-section h2 { margin-bottom: 8px; }
 	.finish-section .divider { margin: 12px 0 20px; }
 
@@ -423,90 +321,12 @@
 		display: block;
 	}
 
-	.natura-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-		gap: 14px;
-		margin-top: 24px;
-	}
-
-	.natura-card {
-		display: flex;
-		flex-direction: column;
-		border-radius: var(--radius-sm);
-		overflow: hidden;
-		box-shadow: var(--shadow-sm);
-		background: var(--color-warm-white);
-	}
-
-	.natura-card .swatch-wrap {
-		aspect-ratio: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 8px;
-	}
-
-	.natura-card .swatch-wrap img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		display: block;
-	}
-
-	.natura-card .finish-info {
-		padding: 8px 10px 10px;
-	}
-
 	.img-caption {
 		font-size: 0.75rem;
 		color: var(--color-muted);
 		text-align: center;
 		margin-top: 8px;
 		letter-spacing: 0.05em;
-	}
-
-	/* Stain grid */
-	.stain-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-		gap: 14px;
-		margin-top: 8px;
-	}
-
-	.stain-card {
-		display: flex;
-		flex-direction: column;
-		border-radius: var(--radius-sm);
-		overflow: hidden;
-		box-shadow: var(--shadow-sm);
-		background: var(--color-warm-white);
-	}
-
-	.stain-card .swatch-wrap {
-		aspect-ratio: 1;
-		overflow: hidden;
-	}
-
-	.stain-card .swatch-wrap img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	.stain-card .finish-info {
-		padding: 10px 10px 12px;
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-	}
-
-	.stain-wood {
-		font-size: 0.7rem;
-		color: var(--color-muted);
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
 	}
 
 	/* Finish grid */

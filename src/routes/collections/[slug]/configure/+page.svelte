@@ -5,6 +5,7 @@
 	import { cart } from '$lib/cart.svelte';
 	import { goto } from '$app/navigation';
 	import { urlFor } from '$lib/sanity/client';
+	import { untrack } from 'svelte';
 
 
 	let { data }: { data: PageData } = $props();
@@ -13,9 +14,11 @@
 		data.collection.productPrices.filter((p) => !p.productType.isAddon)
 	);
 
+	type BedSize = 'twin' | 'full' | 'queen' | 'king';
+
 	let selectedProduct = $state<CollectionProduct | null>(data.selectedProduct ?? null);
-	let topSize = $state('twin');
-	let bottomSize = $state('twin');
+	let topSize = $state<BedSize>('twin');
+	let bottomSize = $state<BedSize>('twin');
 	let selectedFinishId = $state<string>('');
 	let selectedAddonIds = $state<string[]>([]);
 
@@ -48,6 +51,8 @@
 		}
 	});
 
+	const CATEGORY_ORDER = ['Zero-VOC', 'Natura', 'Water Stains'];
+
 	const finishGroups = $derived.by(() => {
 		const map = new Map<string, Finish[]>();
 		for (const finish of data.finishes) {
@@ -58,7 +63,9 @@
 		return [...map.entries()].sort(([a], [b]) => {
 			if (a === 'Other') return 1;
 			if (b === 'Other') return -1;
-			return 0;
+			const ai = CATEGORY_ORDER.indexOf(a);
+			const bi = CATEGORY_ORDER.indexOf(b);
+			return (ai === -1 ? CATEGORY_ORDER.length : ai) - (bi === -1 ? CATEGORY_ORDER.length : bi);
 		});
 	});
 
@@ -100,6 +107,22 @@
 			selectedAddonIds = [...selectedAddonIds, id];
 		}
 	}
+
+	// Default the Ladder add-on to checked for Bunk Bed / Loft Bed products
+	$effect(() => {
+		const product = selectedProduct;
+		const addons = availableAddons;
+		if (!product) return;
+		const isBunkOrLoft = product.productType.displayName === 'Bunk Bed' || product.productType.displayName === 'Loft Bed';
+		if (!isBunkOrLoft) return;
+		const ladder = addons.find((a) => a.productType.displayName === 'Ladder');
+		if (!ladder) return;
+		untrack(() => {
+			if (!selectedAddonIds.includes(ladder.productType._id)) {
+				selectedAddonIds = [...selectedAddonIds, ladder.productType._id];
+			}
+		});
+	});
 
 	function addToCart() {
 		if (!selectedProduct || !selectedFinish) return;

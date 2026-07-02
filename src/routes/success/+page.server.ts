@@ -12,12 +12,19 @@ export const load: PageServerLoad = async ({ url }) => {
 		expand: ['line_items']
 	});
 
+	const lineItems = (session.line_items?.data ?? []).map((item) => ({
+		id: item.id,
+		description: item.description,
+		quantity: item.quantity ?? 0,
+		amountTotal: item.amount_total ? item.amount_total / 100 : 0
+	}));
+
 	return {
 		order: {
 			id: session.id,
 			email: session.customer_details?.email,
 			total: session.amount_total ? session.amount_total / 100 : 0,
-			lineItems: session.line_items?.data ?? []
+			lineItems
 		}
 	};
 };

@@ -28,7 +28,7 @@
 				</div>
 				<div class="detail-row">
 					<span>Order Total</span>
-					<strong>${(data.order.total / 100).toLocaleString()}</strong>
+					<strong>${data.order.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
 				</div>
 			</div>
 

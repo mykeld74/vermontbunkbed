@@ -50,7 +50,9 @@ export const POST: RequestHandler = async ({ request, url }) => {
 						topSize: item.topSize,
 						bottomSize: item.bottomSize ?? '',
 						finishId: item.finishId,
-						addonIds: item.addonIds.join(',')
+						finishName: item.finishName,
+						addonIds: item.addonIds.join(','),
+						addonNames: item.addonNames.join(', ')
 					}
 				}
 			}
