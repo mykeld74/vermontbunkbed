@@ -11,7 +11,7 @@ export const sanityClient = createClient({
 	projectId: PUBLIC_SANITY_PROJECT_ID,
 	dataset: PUBLIC_SANITY_DATASET,
 	apiVersion: '2024-01-01',
-	useCdn: false
+	useCdn: true
 });
 
 const builder = imageUrlBuilder(sanityClient);

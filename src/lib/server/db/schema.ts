@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, text, timestamp, jsonb, index } from 'drizzle-orm/pg-core';
 
 export const task = pgTable('task', {
 	id: serial('id').primaryKey(),
@@ -30,18 +30,22 @@ export interface OrderShippingAddress {
 	state?: string | null;
 }
 
-export const orders = pgTable('orders', {
-	id: text('id').primaryKey(), // Stripe checkout session ID
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow(),
-	customerEmail: text('customer_email'),
-	customerName: text('customer_name'),
-	amountTotal: integer('amount_total'), // cents
-	lineItems: jsonb('line_items').$type<OrderLineItem[]>(), // structured cart snapshot: product, size, finish, add-ons
-	shippingAddress: jsonb('shipping_address').$type<OrderShippingAddress>(),
-	stripeStatus: text('stripe_status'), // Stripe payment_status
-	status: text('status').notNull().default('new'), // new | processing | shipped | delivered | cancelled
-	trackingNumber: text('tracking_number')
-});
+export const orders = pgTable(
+	'orders',
+	{
+		id: text('id').primaryKey(), // Stripe checkout session ID
+		createdAt: timestamp('created_at').defaultNow(),
+		updatedAt: timestamp('updated_at').defaultNow(),
+		customerEmail: text('customer_email'),
+		customerName: text('customer_name'),
+		amountTotal: integer('amount_total'), // cents
+		lineItems: jsonb('line_items').$type<OrderLineItem[]>(), // structured cart snapshot: product, size, finish, add-ons
+		shippingAddress: jsonb('shipping_address').$type<OrderShippingAddress>(),
+		stripeStatus: text('stripe_status'), // Stripe payment_status
+		status: text('status').notNull().default('new'), // new | processing | shipped | delivered | cancelled
+		trackingNumber: text('tracking_number')
+	},
+	(table) => [index('orders_created_at_idx').on(table.createdAt.desc())]
+);
 
 export * from './auth.schema';
