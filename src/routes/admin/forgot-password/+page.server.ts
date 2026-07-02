@@ -1,12 +1,13 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
+import { getPostAuthRedirect } from '$lib/server/admin-auth';
 import { APIError } from 'better-auth/api';
 import { env } from '$env/dynamic/private';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = (event) => {
 	if (event.locals.user) {
-		return redirect(302, '/admin');
+		return redirect(302, getPostAuthRedirect(event.locals.user));
 	}
 	return {};
 };

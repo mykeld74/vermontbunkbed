@@ -7,7 +7,7 @@ import { getRequestEvent } from '$app/server';
 import { count } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/auth.schema';
-import { isAllowedBootstrapEmail } from '$lib/server/admin-auth';
+import { isAllowedBootstrapEmail, isAutoAdminSignupEmail } from '$lib/server/admin-auth';
 import { sendEmail } from '$lib/server/email';
 
 async function getUserCount() {
@@ -44,14 +44,31 @@ export const auth = betterAuth({
 					if (ctx?.path !== '/sign-up/email') return;
 
 					const userCount = await getUserCount();
-					if (userCount > 0) return false;
 
-					if (!isAllowedBootstrapEmail(newUser.email)) return false;
+					if (userCount === 0) {
+						if (!isAllowedBootstrapEmail(newUser.email)) return false;
+
+						return {
+							data: {
+								...newUser,
+								role: 'admin'
+							}
+						};
+					}
+
+					if (isAutoAdminSignupEmail(newUser.email)) {
+						return {
+							data: {
+								...newUser,
+								role: 'admin'
+							}
+						};
+					}
 
 					return {
 						data: {
 							...newUser,
-							role: 'admin'
+							role: null
 						}
 					};
 				}

@@ -1,8 +1,9 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { count } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/auth.schema';
+import { getPostAuthRedirect } from '$lib/server/admin-auth';
 import { APIError } from 'better-auth/api';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -13,28 +14,20 @@ async function getUserCount() {
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
-		return redirect(302, '/admin');
+		return redirect(302, getPostAuthRedirect(event.locals.user));
 	}
 
-	const userCount = await getUserCount();
-	if (userCount > 0) {
-		return redirect(302, '/admin/login');
-	}
-
-	return {};
+	return {
+		isBootstrap: (await getUserCount()) === 0
+	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const userCount = await getUserCount();
-		if (userCount > 0) {
-			return fail(403, { message: 'Account creation is disabled. Ask an administrator to invite you.' });
-		}
-
 		const formData = await event.request.formData();
-		const email = formData.get('email')?.toString() ?? '';
+		const email = formData.get('email')?.toString().trim() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
-		const name = formData.get('name')?.toString() ?? '';
+		const name = formData.get('name')?.toString().trim() ?? '';
 
 		try {
 			await auth.api.signUpEmail({ body: { email, password, name } });
@@ -42,12 +35,18 @@ export const actions: Actions = {
 			if (err instanceof APIError) {
 				return fail(400, {
 					message:
-						'Could not create account. Make sure this email is authorized for the first admin account, and that an account does not already exist.'
+						err.message ||
+						'Could not create account. The email may already be in use or not authorized for the first admin account.'
 				});
 			}
 			return fail(500, { message: 'Unexpected error. Please try again.' });
 		}
 
-		return redirect(302, '/admin');
+		const [createdUser] = await db
+			.select({ role: user.role })
+			.from(user)
+			.where(eq(user.email, email));
+
+		return redirect(302, getPostAuthRedirect(createdUser));
 	}
 };

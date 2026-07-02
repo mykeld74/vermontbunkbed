@@ -11,17 +11,18 @@
 	<title>Account — Admin</title>
 </svelte:head>
 
-<h1>Account</h1>
-<p class="intro">Signed in as <strong>{data.user.email}</strong></p>
+<h1 class="admin-page-title admin-page-title--tight">Account</h1>
+<p class="admin-intro">Signed in as <strong>{data.user.email}</strong></p>
 
-<section class="card">
-	<h2>Change Password</h2>
+<section class="admin-card admin-card--narrow">
+	<h2 class="admin-card-title">Change Password</h2>
 
 	{#if form?.success}
-		<p class="banner success">Your password has been updated.</p>
+		<p class="admin-banner admin-banner--success">Your password has been updated.</p>
 	{/if}
 
 	<form
+		class="admin-form"
 		method="post"
 		action="?/changePassword"
 		use:enhance={() => {
@@ -40,6 +41,7 @@
 		<label>
 			Current Password
 			<input
+				class="admin-field"
 				type="password"
 				name="currentPassword"
 				required
@@ -49,6 +51,7 @@
 		<label>
 			New Password
 			<input
+				class="admin-field"
 				type="password"
 				name="newPassword"
 				required
@@ -59,6 +62,7 @@
 		<label>
 			Confirm New Password
 			<input
+				class="admin-field"
 				type="password"
 				name="confirmPassword"
 				required
@@ -68,88 +72,11 @@
 		</label>
 
 		{#if form?.message}
-			<p class="banner error">{form.message}</p>
+			<p class="admin-banner admin-banner--error">{form.message}</p>
 		{/if}
 
-		<button type="submit" class="primary-btn" disabled={saving}>
+		<button type="submit" class="admin-btn admin-btn--align-start" disabled={saving}>
 			{saving ? 'Updating…' : 'Update Password'}
 		</button>
 	</form>
 </section>
-
-<style>
-	h1 {
-		font-size: 1.6rem;
-		margin-bottom: 8px;
-	}
-	h2 {
-		font-size: 1.1rem;
-		margin: 0 0 20px;
-	}
-	.intro {
-		color: #7a7168;
-		margin: 0 0 24px;
-	}
-	.card {
-		background: #fff;
-		border-radius: 10px;
-		padding: 24px;
-		max-width: 420px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-	}
-	form {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-	}
-	label {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		font-size: 0.85rem;
-		font-weight: 600;
-		color: #3d342c;
-	}
-	input {
-		padding: 10px 12px;
-		border: 1px solid #d8d2c8;
-		border-radius: 6px;
-		font-size: 0.9rem;
-		font-weight: 400;
-	}
-	input:focus {
-		outline: none;
-		border-color: #5c3d1e;
-	}
-	.primary-btn {
-		align-self: flex-start;
-		background: #5c3d1e;
-		color: #fff;
-		border: none;
-		border-radius: 6px;
-		padding: 10px 16px;
-		font-weight: 600;
-		cursor: pointer;
-	}
-	.primary-btn:hover {
-		background: #7a5230;
-	}
-	.primary-btn:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-	.banner {
-		padding: 12px 14px;
-		border-radius: 8px;
-		font-size: 0.9rem;
-		margin: 0;
-	}
-	.banner.success {
-		background: #e2f3e5;
-		color: #2d7a2d;
-	}
-	.banner.error {
-		background: #fdf1f0;
-		color: #b3261e;
-	}
-</style>

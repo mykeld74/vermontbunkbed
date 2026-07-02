@@ -1,6 +1,9 @@
 import { error, fail } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import { auth } from '$lib/server/auth';
-import { isDashboardAdmin } from '$lib/server/admin-auth';
+import { db } from '$lib/server/db';
+import { user } from '$lib/server/db/auth.schema';
+import { getDashboardRole, isDashboardAdmin } from '$lib/server/admin-auth';
 import { APIError } from 'better-auth/api';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -24,7 +27,8 @@ export const load: PageServerLoad = async ({ locals, request }) => {
 
 	return {
 		users: result.users,
-		currentUserId: locals.user!.id
+		currentUserId: locals.user!.id,
+		pendingCount: result.users.filter((dashboardUser) => !getDashboardRole(dashboardUser)).length
 	};
 };
 
@@ -72,7 +76,20 @@ export const actions: Actions = {
 		const userId = formData.get('userId')?.toString() ?? '';
 		const role = formData.get('role')?.toString() ?? '';
 
-		if (!userId || (role !== 'admin' && role !== 'user')) {
+		if (!userId) {
+			return fail(400, { message: 'Invalid request.' });
+		}
+
+		if (role === 'pending') {
+			if (userId === locals.user!.id) {
+				return fail(400, { message: 'You cannot remove your own access.' });
+			}
+
+			await db.update(user).set({ role: null }).where(eq(user.id, userId));
+			return { success: true };
+		}
+
+		if (role !== 'admin' && role !== 'user') {
 			return fail(400, { message: 'Invalid request.' });
 		}
 
