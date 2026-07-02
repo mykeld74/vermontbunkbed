@@ -6,6 +6,8 @@
 
 	let statusFilter = $state('all');
 	let search = $state('');
+	let dateFrom = $state('');
+	let dateTo = $state('');
 	let statusOverrides = $state<Record<string, string>>({});
 	let savingId = $state<string | null>(null);
 
@@ -13,9 +15,26 @@
 		return statusOverrides[order.id] ?? order.status;
 	}
 
+	function isInDateRange(createdAt: string | Date | null, from: string, to: string) {
+		if (!createdAt) return false;
+		if (!from && !to) return true;
+
+		const created = new Date(createdAt);
+		if (from) {
+			const start = new Date(`${from}T00:00:00`);
+			if (created < start) return false;
+		}
+		if (to) {
+			const end = new Date(`${to}T23:59:59.999`);
+			if (created > end) return false;
+		}
+		return true;
+	}
+
 	const filtered = $derived(
 		data.orders.filter((o) => {
 			if (statusFilter !== 'all' && displayStatus(o) !== statusFilter) return false;
+			if (!isInDateRange(o.createdAt, dateFrom, dateTo)) return false;
 			if (search.trim()) {
 				const q = search.trim().toLowerCase();
 				const haystack = `${o.customerEmail ?? ''} ${o.customerName ?? ''} ${o.id}`.toLowerCase();
@@ -24,6 +43,8 @@
 			return true;
 		})
 	);
+
+	const hasDateFilter = $derived(Boolean(dateFrom || dateTo));
 
 	function fmtDate(d: string | Date | null) {
 		if (!d) return '—';
@@ -52,6 +73,28 @@
 		placeholder="Search by name, email, or order ID"
 		bind:value={search}
 	/>
+	<div class="admin-toolbar-dates">
+		<label>
+			From
+			<input class="admin-date-field" type="date" bind:value={dateFrom} max={dateTo || undefined} />
+		</label>
+		<label>
+			To
+			<input class="admin-date-field" type="date" bind:value={dateTo} min={dateFrom || undefined} />
+		</label>
+		{#if hasDateFilter}
+			<button
+				type="button"
+				class="admin-btn admin-btn--ghost"
+				onclick={() => {
+					dateFrom = '';
+					dateTo = '';
+				}}
+			>
+				Clear dates
+			</button>
+		{/if}
+	</div>
 	<select class="admin-field" bind:value={statusFilter}>
 		<option value="all">All statuses</option>
 		<option value="new">New</option>
